@@ -18,6 +18,8 @@ printf '%s' "your-passcode" | sha256sum
 2. Update the `MONTHLY_CODE` variable in `pg2Info.txt` file
 3. Update the `PREFIX` variable in `pg2Info.txt` file. This will be the prefix used for the student repos for the upcoming month. EX: `pg2-2607-`
 4. Update the `TEMPLATE` variable in `pg2Info.txt` file. Only do this if the template repo has changed for the upcoming month.
+   > NOTE: if updating the template repo, then you must add it to the list of selected repos for the bot (don't forget to click the "Save" button)
+   > https://github.com/organizations/FullSailGameStudies/settings/installations/143380104 
 5. Update the `MAX_REPOS` variable in `pg2Info.txt` file. Count how many students and instructors for the upcoming month and use it for the MAX_REPOS.
 6. Commit and push the changes
 
