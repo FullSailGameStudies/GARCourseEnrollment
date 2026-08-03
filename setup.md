@@ -38,7 +38,7 @@ git push -u origin main
 
 ## 2. Create Template Repositories
 
-The provision workflow creates student repos from templates (see the `LABS` variable in `provision.yml`). Each template must:
+The provision workflow creates student repos from templates. The template must:
 
 1. **Exist** in your organization.
 2. Be marked as a **template repository** (Settings > "Template repository" checkbox).
@@ -100,4 +100,4 @@ Go to your course-enrollment repository Settings -> Secrets and variables -> Act
 
 
 ## What to do each month
-Read the [teacher.md](./teacher.md) for instructions for what teachers must do each month.
+Read the [teacher.md](./teacher.md) for instructions the teachers must do each month.
