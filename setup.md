@@ -96,7 +96,7 @@ Go to your course-enrollment repository Settings -> Secrets and variables -> Act
    2. Click the "New label" button.
    3. Add a name (e.g. provision-repo)
    4. Click the "Create label" button.
-   5. Update the provision.yml and the student-invite.yml scripts with the name of the label.
+   5. Update the provision2.yml and the student-invite.yml scripts with the name of the label.
 
 
 ## What to do each month

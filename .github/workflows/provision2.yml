@@ -152,7 +152,7 @@ jobs:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh issue comment $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --body "✅ Verification passed. Creating repos (be patient, this will take a few minutes)"
+          gh issue comment $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --body "✅ Verification passed. Creating repo (be patient, this will take a few minutes)"
 
       - name: Generate and Invite
         # This step only executes if the passcode is correct AND the repo doesn't exist yet
@@ -160,6 +160,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN:  ${{ steps.app_token.outputs.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
           ORG: ${{ env.ORG_NAME }}
           TEMPLATE_REPO: ${{ env.DYNAMIC_TEMPLATE_NAME }}
           STUDENT: ${{ github.event.issue.user.login }}
@@ -193,7 +194,7 @@ jobs:
 
           # Add an extra safety cushion sleep to ensure files are fully flushed to disk
           sleep 5
-
+          
           echo "Adding student $STUDENT as a collaborator..."
           # This execution line remains perfectly secure! 
           # It grants individual student visibility while branding the invitation email from the Organization App name.
@@ -202,6 +203,9 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             /repos/$ORG/$NEW_REPO_NAME/collaborators/$STUDENT \
             -f permission='write'
+            
+          gh issue comment $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --body "@$STUDENT sending email to invite you as a collaborator on your new repo (**https://github.com/${ORG}/${NEW_REPO_NAME}**). Please **check your email** to accept the invitation."
+
 
       - name: Initialize Feedback Branch and PR
         if: env.AUTH_FAILED == 'false' && env.LIMIT_EXCEEDED == 'false' && env.REPO_EXISTS == 'false'
@@ -227,6 +231,25 @@ jobs:
           git checkout master
           git commit --allow-empty -m "Initialize assignment feedback environment"
           git push origin master
+
+          # wait for the sync to finalize before trying to open the PR
+          echo "Verifying remote branch sync before opening tracking PR..."
+          for i in $(seq 1 15); do
+            MASTER_SHA=$(gh api "/repos/$ORG/$NEW_REPO_NAME/commits/$DEFAULT_BRANCH" --jq '.sha' 2>/dev/null || true)
+            FEEDBACK_SHA=$(gh api "/repos/$ORG/$NEW_REPO_NAME/commits/feedback" --jq '.sha' 2>/dev/null || true)
+            
+            # If both SHAs are successfully populated and are different, the PR is safe to build
+            if [ -n "$MASTER_SHA" ] && [ -n "$FEEDBACK_SHA" ] && [ "$MASTER_SHA" != "$FEEDBACK_SHA" ]; then
+              echo "Remote repository branches synced perfectly! (Master: $MASTER_SHA, Feedback: $FEEDBACK_SHA)"
+              break
+            fi
+            
+            echo "Waiting for GitHub network replication layer... (Attempt $i/10)"
+            sleep 2
+          done
+          
+          # Add a tiny final cushion sleep to ensure the tracking indices flush completely
+          sleep 3
           
           echo "Opening feedback tracking pull request..."
           gh pr create \
@@ -245,5 +268,5 @@ jobs:
           STUDENT: ${{ github.event.issue.user.login }}
           NEW_REPO_NAME: ${{ env.DYNAMIC_REPO_NAME }}
         run: |
-          gh issue comment $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --body "@$STUDENT Private repository successfully configured at **https://github.com/${ORG}/${NEW_REPO_NAME}**!"
+          gh issue comment $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --body "@$STUDENT Private repository successfully configured at **https://github.com/${ORG}/${NEW_REPO_NAME}**"
           gh issue close $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --reason "completed"

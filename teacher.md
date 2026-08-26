@@ -45,15 +45,18 @@ gh repo list FullSailGameStudies --limit 1000 --json name --jq '.[].name' | grep
 
 Repositories have a month-specific prefix (e.g. `pg2-2607-`). To clone all repos for a given month, filter the `gh repo list` output by the month prefix and clone each match:
 
-> Replace `REPO_PREFIX` with the month prefix you want to clean up (e.g. `pg2-2607-`).
+
+> **NOTE:** replace the `pg2-2608-` with the current month prefix.
+
 ```bash
 # Preview repos that will be cloned (dry run)
-gh repo list FullSailGameStudies --limit 1000 --json name,url --jq '.[] | "\(.name)\t\(.url)"'  | grep "^REPO_PREFIX" 
+gh repo list FullSailGameStudies --limit 1000 --json name,url --jq '.[] | "\(.name)\t\(.url)"'  | grep "^pg2-2608-" 
 
 # Clone all repos for the month into the current directory
 # don't create upstream branch to the forked repo
 # each repo is created in its own folder
-gh repo list FullSailGameStudies --limit 1000 --json name,url --jq '.[] | "\(.name)\t\(.url)"' | grep '^REPO_PREFIX' | xargs -L 1 bash -c 'gh repo clone "$2" "$1" -- --no-upstream' _
+gh repo list FullSailGameStudies --limit 1000 --json name,url --jq '.[] | "\(.name)\t\(.url)"' | grep '^pg2-2608-' | xargs -L 1 bash -c 'gh repo clone "$2" "$1"' _
+
 ```
 
 > **Tip:** If you need to clone into a specific folder, create it first and run the command from inside that folder. Each repo will be cloned into its own subdirectory named after the repo.
@@ -78,13 +81,13 @@ Student enrollment issues accumulate over time. Use the GitHub CLI to list and d
 
 ```bash
 # List closed issues (number and title)
-gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --state closed --json number,title --jq '.[] | "\(.number)\t\(.title)"'
+gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --limit 1000 --state closed --json number,title --jq '.[] | "\(.number)\t\(.title)"'
 
 # Count closed issues
-gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --state closed --json number --jq 'length'
+gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --limit 1000 --state closed --json number --jq 'length'
 
 # Delete all closed issues
-gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --state closed --json number --jq '.[].number' | xargs -I {} gh issue delete {} --repo FullSailGameStudies/PG2CourseEnrollment --yes
+gh issue list --repo FullSailGameStudies/PG2CourseEnrollment --limit 1000 --state closed --json number --jq '.[].number' | xargs -I {} gh issue delete {} --repo FullSailGameStudies/PG2CourseEnrollment --yes
 ```
 
 > **Warning:** `gh issue delete --yes` skips the confirmation prompt. Always review the list of closed issues before deleting. Deletion is permanent and cannot be undone.
