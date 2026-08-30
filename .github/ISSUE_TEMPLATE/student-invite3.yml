@@ -1,0 +1,17 @@
+name: Request Assignment Repository 3
+description: Instantly provision your private assignment repository using the shared monthly claim code.
+title: "Private Repository Request 3"
+labels: ["provision-repo3"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Welcome to the GAR Course!
+        Clicking submit below will instantly check our class capacity limits and generate your personal, private workspace under our organization.
+  - type: input
+    id: passcode
+    attributes:
+      label: Claim Code
+      placeholder: Enter the active monthly claim code provided by your instructor.
+    validations:
+      required: true
