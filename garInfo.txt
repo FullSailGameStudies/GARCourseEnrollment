@@ -1,5 +1,5 @@
 # PREFIX: gar-2609-
-# TEMPLATE: PG2StudentRepo26.9
+# TEMPLATE: gar-labs-2608-UnrealShooterTemplate
 # MONTHLY_CODE: 56d99bdf9a7d1e9698094e842ac0ca73fc4f4fa9c8153bc623eb70a94a5c8650
 # MAX_REPOS: 100
 

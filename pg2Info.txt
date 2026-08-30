@@ -1,8 +1,0 @@
-# PREFIX: gar-2609-
-# TEMPLATE: PG2StudentRepo26.9
-# MONTHLY_CODE: 39a5122deb5ab87d4f00c4de85b0ca266f9496358bd91ff5fafd6851faf34d60
-# MAX_REPOS: 100
-
-
-# NOTE: if updating the template repo, then you must add it to the list of selected repos for the bot (don't forget to click the "Save" button)
-# https://github.com/organizations/FullSailGameStudies/settings/installations/143380104 
